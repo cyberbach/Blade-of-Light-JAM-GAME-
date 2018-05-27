@@ -49,6 +49,7 @@ public class MyPlayerSystem extends IteratingSystem {
 
 
     public void playWalkSounds () {
+        SoundAsset.PLAYER_STEP.stop();
         SoundAsset.PLAYER_STEP.play();
         SoundAsset.PLAYER_STEP.playLoop();
         SoundAsset.PLAYER_STEP.setThisVolume( 0 );

@@ -55,7 +55,11 @@ public enum Settings {
 
         if ( !Settings.NOT_FIRST_RUN.getBoolean() ) {
             Settings.NOT_FIRST_RUN.setBoolean( true );
-            // FIXME init loading
+
+            Settings.MUSIC.setInteger( 50 );
+            Settings.SOUND.setInteger( 50 );
+            Settings.VERT_SENS.setInteger( 25 );
+            Settings.HORIZ_SENS.setInteger( 60 );
         }
 
         if ( DEBUG.SETTINGS.get() ) {

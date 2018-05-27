@@ -47,6 +47,7 @@ import net.overmy.bladeoflight.resources.FontAsset;
 import net.overmy.bladeoflight.resources.GameColor;
 import net.overmy.bladeoflight.resources.IMG;
 import net.overmy.bladeoflight.resources.ModelAsset;
+import net.overmy.bladeoflight.resources.SoundAsset;
 import net.overmy.bladeoflight.utils.UIHelper;
 
 import java.util.ArrayList;
@@ -349,6 +350,9 @@ public class GameScreen extends Base2DScreen {
                 hideGameGUI();
                 playerIsAlreadyDIE = true;
 
+                SoundAsset.PLAYER_STEP.stop();
+                SoundAsset.NPC_STEP.stop();
+
                 //physicalConnectSystem.block();
             }
         }
@@ -389,6 +393,9 @@ public class GameScreen extends Base2DScreen {
         gameGroup = null;
 
         interactSystem = null;
+
+        SoundAsset.PLAYER_STEP.stop();
+        SoundAsset.NPC_STEP.stop();
     }
 
 
