@@ -3,19 +3,24 @@ package net.overmy.bladeoflight.ashley.systems;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.decals.Decal;
 import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 
+import net.overmy.bladeoflight.Core;
 import net.overmy.bladeoflight.MyCamera;
 import net.overmy.bladeoflight.MyRender;
+import net.overmy.bladeoflight.ashley.EntityBuilder;
 import net.overmy.bladeoflight.ashley.MyMapper;
 import net.overmy.bladeoflight.ashley.component.LifeComponent;
 import net.overmy.bladeoflight.ashley.component.ModelComponent;
 import net.overmy.bladeoflight.ashley.component.RemoveByTimeComponent;
 import net.overmy.bladeoflight.ashley.component.TYPE_OF_ENTITY;
+import net.overmy.bladeoflight.resources.GameColor;
+import net.overmy.bladeoflight.resources.TextAsset;
 
 
 
@@ -128,9 +133,22 @@ public class LifeSystem extends IteratingSystem {
                     MyMapper.LEVEL_OBJECT.get( entity ).gameObject.use();
                 }
             } else {
-                entity.add( new RemoveByTimeComponent( 0 ) );
+
                 if ( TYPE_OF_ENTITY.MYPLAYER.equals( typeOfEntity ) ) {
                     //MyPlayer.live = false;
+                    Core.playerDie = true;
+                    EntityBuilder.createText( TextAsset.DIE.get() );
+
+
+                    MyMapper.ANIMATION.get( entity ).queue( 5, 0.5f );
+
+                    entity.remove( LifeComponent.class );
+                    MyCamera.block();
+                    //MyCamera.removeConnectionBody();
+                    Gdx.app.debug( "camera blocked","player die in life system" );
+
+                }else {
+                    entity.add( new RemoveByTimeComponent( 0 ) );
                 }
             }
         }

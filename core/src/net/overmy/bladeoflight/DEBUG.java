@@ -8,7 +8,7 @@ package net.overmy.bladeoflight;
 public enum DEBUG {
     ENABLE_ENGLISH_TEXT( false ),
     SETTINGS( false ),
-    STAGE( true ),
+    STAGE( false ),
     DECAL_ENTITIES( false ),
     SHOW_MODEL_INFO( false ),
     NPC_ACTIONS( false ),
@@ -19,8 +19,8 @@ public enum DEBUG {
     ON_WINDOWS( true ),
 
     CONTACTS( false ),
-    ENTITIES( false ),
-    PHYSICAL_MESH( true ),
+    ENTITIES( true ),
+    PHYSICAL_MESH( false ),
     DYNAMIC_LEVELS( false ),
     GAME_MASTER_MODE( true ),
     ;

@@ -11,7 +11,16 @@ import net.overmy.bladeoflight.DEBUG;
 
 
 public enum TextAsset {
-    Title( "game", "game" ),;
+    Title( "Клинок света", "Blade of light" ),
+    StartGame( "начать игру", "start" ),
+    Options( "опции", "options" ),
+    Sound( "звук", "sound" ),
+    Music( "музыка", "music" ),
+    Vert( "верт.камера", "vert.camera" ),
+    Horiz( "гориз.камера", "horiz.camera" ),
+
+    DIE( "печалька", "fail" ),
+    ;
 
     public static boolean russianLocale = true;
     private final String russianText;

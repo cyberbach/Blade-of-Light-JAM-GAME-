@@ -3,19 +3,25 @@ package net.overmy.bladeoflight;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.bullet.collision.ContactListener;
+import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody;
 
+import net.overmy.bladeoflight.ashley.EntityBuilder;
 import net.overmy.bladeoflight.ashley.MyMapper;
 import net.overmy.bladeoflight.ashley.component.CollectableComponent;
 import net.overmy.bladeoflight.ashley.component.LevelIDComponent;
+import net.overmy.bladeoflight.ashley.component.NPCComponent;
 import net.overmy.bladeoflight.ashley.component.PhysicalComponent;
 import net.overmy.bladeoflight.ashley.component.RemoveByTimeComponent;
+import net.overmy.bladeoflight.ashley.component.SkipScriptComponent;
 import net.overmy.bladeoflight.ashley.component.TYPE_OF_ENTITY;
 import net.overmy.bladeoflight.logic.DynamicLevels;
 import net.overmy.bladeoflight.logic.collectables.Collectable;
 import net.overmy.bladeoflight.logic.collectables.CollectableProcessor;
 import net.overmy.bladeoflight.logic.objects.GameObject;
+import net.overmy.bladeoflight.resources.SoundAsset;
 
 
 /*
@@ -240,30 +246,30 @@ public class WorldContactListener extends ContactListener {
             }
         }
 
-        /*if ( ( contact1NPC && contact2Player ) || ( contact2NPC && contact1Player ) ) {
+        if ( ( contact1NPC && contact2Player ) || ( contact2NPC && contact1Player ) ) {
             // мы получаем урон от Enemy
-            *//*if ( MyMapper.NPC.has( entity01 ) ) {
+            if ( MyMapper.NPC.has( entity01 ) ) {
                 NPCComponent component = MyMapper.NPC.get( entity01 );
                 if ( component.hunting ) {
                     component.time = 0.0f; // drop to next action
                     btRigidBody body2 = MyMapper.PHYSICAL.get( entity02 ).body;
                     body2.getWorldTransform().getTranslation( tempPosition2 );
                     EntityBuilder.create5StarsFX( tempPosition2 );
-                    SoundAsset.HIT.play();
+                    //SoundAsset.HIT.play();
 
-                    MyPlayer.hurt = true;
+                    //MyPlayer.hurt = true;
 
-                    if ( MyMapper.LIFE.has( entity02 ) && !MyPlayer.immortal ) {
+                    if ( MyMapper.LIFE.has( entity02 ) ) {
                         MyMapper.LIFE.get( entity02 ).decLife( component.damage );
-                        if ( MathUtils.randomBoolean() ) {
+                        /*if ( MathUtils.randomBoolean() ) {
                             SoundAsset.HURT1.play();
                         } else {
                             SoundAsset.HURT2.play();
-                        }
+                        }*/
                     }
                     component.hunting = false; // drop HUNT action
                 }
-            }*//*
+            }
             if ( MyMapper.NPC.has( entity02 ) ) {
                 NPCComponent component = MyMapper.NPC.get( entity02 );
                 if ( component.hunting ) {
@@ -271,25 +277,26 @@ public class WorldContactListener extends ContactListener {
                     btRigidBody body1 = MyMapper.PHYSICAL.get( entity01 ).body;
                     body1.getWorldTransform().getTranslation( tempPosition1 );
                     EntityBuilder.create5StarsFX( tempPosition1 );
-                    SoundAsset.HIT.play();
+                    //SoundAsset.HIT.play();
 
-                    MyPlayer.hurt = true;
+                    //MyPlayer.hurt = true;
 
                     component.hunting = false; // drop HUNT action
-                    if ( MyMapper.LIFE.has( entity01 ) && !MyPlayer.immortal ) {
+                    if ( MyMapper.LIFE.has( entity01 ) ) {
                         MyMapper.LIFE.get( entity01 ).decLife( component.damage );
-                        if ( MathUtils.randomBoolean() ) {
+
+                        /*if ( MathUtils.randomBoolean() ) {
                             SoundAsset.HURT1.play();
                         } else {
                             SoundAsset.HURT2.play();
-                        }
+                        }*/
                     }
                 }
             }
             return;
         }
 
-        if ( MyPlayer.isAttacking ) {
+        if ( Core.playerAttacking ) {
             btRigidBody body1 = MyMapper.PHYSICAL.get( entity01 ).body;
             btRigidBody body2 = MyMapper.PHYSICAL.get( entity02 ).body;
 
@@ -297,31 +304,35 @@ public class WorldContactListener extends ContactListener {
             body2.getWorldTransform().getTranslation( tempPosition2 );
 
             if ( contact2MyWeapon && !contact1Player ) {
-                MyPlayer.isAttacking = false;
+                Core.playerAttacking = false;
 
                 EntityBuilder.create5StarsFX( tempPosition1 );
 
-                SoundAsset.HIT.play();
+                //SoundAsset.HIT.play();
 
                 tempPosition1.sub( tempPosition2 ).nor().scl( 50 );
                 body1.applyCentralImpulse( tempPosition1 );
 
                 if ( MyMapper.LIFE.has( entity01 ) ) {
                     if ( contact1DestroyableBox || contact1DestroyableRock || contact1NPC ) {
-                        MyMapper.LIFE.get( entity01 ).decLife( MyPlayer.damage );
+                        MyMapper.LIFE.get( entity01 ).decLife( 10 );
+
+                        if(MyMapper.LIFE.get( entity01 ).life<1){
+                            EntityBuilder.create25StarsFX( tempPosition1 );
+                        }
 
                         if ( contact1NPC ) {
                             NPCComponent component = MyMapper.NPC.get( entity01 );
-                            entity01.add( new SkipActionComponent() );
+                            //entity01.add( new SkipScriptComponent() );
                             component.hunting = false;
                             component.hurt = true;
 
                             //if ( !component.die ) {
-                                if ( MathUtils.randomBoolean() ) {
+                                /*if ( MathUtils.randomBoolean() ) {
                                     SoundAsset.HURT3.play();
                                 } else {
                                     SoundAsset.HURT4.play();
-                                }
+                                }*/
                             //}
                         }
                     }
@@ -330,38 +341,42 @@ public class WorldContactListener extends ContactListener {
             }
 
             if ( contact1MyWeapon && !contact2Player ) {
-                MyPlayer.isAttacking = false;
+                Core.playerAttacking = false;
 
                 EntityBuilder.create5StarsFX( tempPosition2 );
 
-                SoundAsset.HIT.play();
+                //SoundAsset.HIT.play();
 
                 tempPosition2.sub( tempPosition1 ).nor().scl( 50 );
                 body2.applyCentralImpulse( tempPosition2 );
 
                 if ( MyMapper.LIFE.has( entity02 ) ) {
                     if ( contact2DestroyableBox || contact2DestroyableRock || contact2NPC ) {
-                        MyMapper.LIFE.get( entity02 ).decLife( MyPlayer.damage );
+                        MyMapper.LIFE.get( entity02 ).decLife( 10 );
+
+                        if(MyMapper.LIFE.get( entity02 ).life<1){
+                            EntityBuilder.create25StarsFX( tempPosition2 );
+                        }
 
                         if ( contact2NPC ) {
                             NPCComponent component = MyMapper.NPC.get( entity02 );
                             //if ( !component.die ) {
-                                entity02.add( new SkipActionComponent() );
+                                //entity02.add( new SkipScriptComponent() );
                                 component.hunting = false;
                                 component.hurt = true;
 
-                                if ( MathUtils.randomBoolean() ) {
+                                /*if ( MathUtils.randomBoolean() ) {
                                     SoundAsset.HURT3.play();
                                 } else {
                                     SoundAsset.HURT4.play();
-                                }
+                                }*/
                             //}
                         }
                     }
                     //return;
                 }
             }
-        }*/
+        }
     }
 
 

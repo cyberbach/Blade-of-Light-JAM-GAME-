@@ -7,7 +7,10 @@ package net.overmy.bladeoflight.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
+import com.badlogic.gdx.graphics.g3d.model.Node;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody;
 import com.badlogic.gdx.scenes.scene2d.Group;
@@ -31,12 +34,16 @@ import net.overmy.bladeoflight.ashley.EntityBuilder;
 import net.overmy.bladeoflight.ashley.systems.DecalSystem;
 import net.overmy.bladeoflight.ashley.systems.InteractSystem;
 import net.overmy.bladeoflight.ashley.systems.MyPlayerSystem;
+import net.overmy.bladeoflight.ashley.systems.NPCSystem;
+import net.overmy.bladeoflight.ashley.systems.PhysicalConnectSystem;
 import net.overmy.bladeoflight.ashley.systems.RenderSystem;
 import net.overmy.bladeoflight.ashley.systems.TextDecalSystem;
+import net.overmy.bladeoflight.ashley.systems.WeaponSystem;
 import net.overmy.bladeoflight.logic.DynamicLevels;
 import net.overmy.bladeoflight.logic.GameHelper;
 import net.overmy.bladeoflight.logic.cutscenes.CutScene;
 import net.overmy.bladeoflight.resources.FontAsset;
+import net.overmy.bladeoflight.resources.GameColor;
 import net.overmy.bladeoflight.resources.IMG;
 import net.overmy.bladeoflight.resources.ModelAsset;
 import net.overmy.bladeoflight.utils.UIHelper;
@@ -45,7 +52,6 @@ import java.util.ArrayList;
 
 public class GameScreen extends Base2DScreen {
 
-    private Image inventoryButton = null;
     private Image aimImage        = null;
     private Image attackButton    = null;
     private Image jumpButton      = null;
@@ -58,9 +64,11 @@ public class GameScreen extends Base2DScreen {
 
     private GUI_TYPE guiType;
 
-    private TextDecalSystem textDecalSystem = null;
-    private InteractSystem  interactSystem  = null;
-    private MyPlayerSystem  playerSystem    = null;
+    private TextDecalSystem       textDecalSystem = null;
+    private InteractSystem        interactSystem  = null;
+    private PhysicalConnectSystem physicalConnectSystem  = null;
+    private MyPlayerSystem        playerSystem    = null;
+    private NPCSystem             npcSystem       = null;
 
     private static ArrayList< Vector3 > pushedPositions = new ArrayList< Vector3 >();
 
@@ -80,12 +88,15 @@ public class GameScreen extends Base2DScreen {
     public void show () {
         super.show();
 
+        Core.playerDie=false;
+        MyCamera.unblock();
+
         textDecalSystem = AshleyWorld.getEngine().getSystem( TextDecalSystem.class );
         textDecalSystem.init();
 
-        playerSystem = AshleyWorld
-                .getEngine()
-                .getSystem( MyPlayerSystem.class );
+        playerSystem = AshleyWorld.getEngine().getSystem( MyPlayerSystem.class );
+        npcSystem = AshleyWorld.getEngine().getSystem( NPCSystem.class );
+        physicalConnectSystem = AshleyWorld.getEngine().getSystem( PhysicalConnectSystem.class );
 
         //AshleyWorld.getEngine().getSystem( NPCSystem.class ).setWalkSound();
 
@@ -125,25 +136,30 @@ public class GameScreen extends Base2DScreen {
             MyPlayer.addToBag( Item.GUN_WEAPON_UPGRADED );*/
         }
 
+            ModelInstance playerInstance = ModelAsset.MY_PLAYER.get();
 
+        for( Material a : playerInstance.materials){
+            a.clear();
+            ColorAttribute diffuse = ColorAttribute.createDiffuse( GameColor.BG.get() );
+            a.set( diffuse );
+        }
 
-        ModelInstance playerInstance = ModelAsset.MY_PLAYER.get();
-
-        btRigidBody body = null;
-
-        GameHelper helper = new GameHelper();
+            GameHelper helper = new GameHelper();
         body = EntityBuilder.createPlayer( playerInstance,
-                                           helper.startPositions[ DynamicLevels.getCurrent() ] );
+                                                           helper.startPositions[ DynamicLevels.getCurrent() ] );
 
-        btRigidBody ghostCameraBody = EntityBuilder.createGhostCamera(body);
+            Node rightArmNode = playerInstance.getNode( "rightArm3", true );
+            EntityBuilder.createWeapon( rightArmNode, playerInstance.transform );
 
-        MyCamera.setConnectionBody( ghostCameraBody );
+            btRigidBody ghostCameraBody = EntityBuilder.createGhostCamera( body );
+
+            MyCamera.setConnectionBody( ghostCameraBody );
+
+            CutScene.setGameScene( this );
 
         showGameGUI();
-
-        CutScene.setGameScene( this );
     }
-
+    btRigidBody body;
 
     @Override
     public boolean touchDragged ( float x, float y ) {
@@ -174,7 +190,7 @@ public class GameScreen extends Base2DScreen {
     public void update ( float delta ) {
         super.update( delta );
 
-        CutScene.update(delta);
+        CutScene.update( delta );
 
         //MusicAsset.playRandom( delta );
 
@@ -212,7 +228,7 @@ public class GameScreen extends Base2DScreen {
             }
 
             if ( Gdx.input.isKeyJustPressed( Input.Keys.SPACE ) ) {
-                playerSystem.startJump();
+                playerSystem.startAttack2();
             }
 
             // GameMaster Mode
@@ -281,6 +297,10 @@ public class GameScreen extends Base2DScreen {
             //}
         }
 
+        if(body!=null && !Core.playerDie){
+            npcSystem.setPlayerPosition(body.getWorldTransform());
+        }
+
         if ( DEBUG.FPS.get() ) {
             if ( TimeUtils.nanoTime() - startTime > 1000000000 ) /* 1,000,000,000ns == one second */ {
                 log.setLength( 0 );
@@ -311,7 +331,22 @@ public class GameScreen extends Base2DScreen {
                 }
             }
         }
+
+        if(Core.playerDie){
+            if(!playerIsAlreadyDIE) {
+                Gdx.app.debug( "", "Core.playerDie in game screen" );
+                MyCamera.block();
+                AshleyWorld.getEngine().getSystem( MyPlayerSystem.class ).block();
+                //AshleyWorld.getEngine().getSystem( WeaponSystem.class ).block();
+                hideGameGUI();
+                playerIsAlreadyDIE=true;
+
+                //physicalConnectSystem.block();
+            }
+        }
     }
+
+    private boolean playerIsAlreadyDIE = false;
 
 
     @Override
@@ -326,10 +361,12 @@ public class GameScreen extends Base2DScreen {
     }
 
 
-
     @Override
     public void dispose () {
         super.dispose();
+
+        MyCamera.removeConnectionBody();
+        AshleyWorld.getEngine().removeAllEntities();
 
         textDecalSystem = null;
         //AshleyWorld.getEngine().getSystem( NPCSystem.class ).disableWalkSound();
@@ -343,22 +380,19 @@ public class GameScreen extends Base2DScreen {
         gameGroup = null;
 
         interactSystem = null;
-
-        MyCamera.removeConnectionBody();
     }
 
 
     public void hideGameGUI () {
+        if(guiType.equals( GUI_TYPE.NONE ))return;
         guiType = GUI_TYPE.NONE;
 
         touchPadGroup.clearActions();
         attackButton.clearActions();
         jumpButton.clearActions();
-        inventoryButton.clearActions();
         UIHelper.scaleOut( touchPadGroup );
         UIHelper.scaleOut( jumpButton );
         UIHelper.scaleOut( attackButton );
-        UIHelper.scaleOut( inventoryButton );
     }
 
 
@@ -392,7 +426,7 @@ public class GameScreen extends Base2DScreen {
         gameGroup.addActor( touchPadGroup );
 
         if ( jumpButton == null ) {
-            jumpButton = new Image( IMG.JUMP_BUTTON.createSprite() );
+            jumpButton = new Image( IMG.ATTACK2_BUTTON.createSprite() );
             jumpButton.setSize( Core.HEIGHT * 0.24f, Core.HEIGHT * 0.24f );
             jumpButton.setPosition( Core.WIDTH - jumpButton.getWidth() * 1.3f,
                                     jumpButton.getHeight() * 0.9f );
@@ -405,7 +439,8 @@ public class GameScreen extends Base2DScreen {
                     if ( showGameOver ) {
                         return;
                     }
-                    playerSystem.startJump();
+                    playerSystem.startAttack2();
+                    UIHelper.clickAnimation( jumpButton );
                 }
             } );
         }
@@ -413,7 +448,7 @@ public class GameScreen extends Base2DScreen {
         gameGroup.addActor( jumpButton );
 
         if ( attackButton == null ) {
-            attackButton = new Image( IMG.HIT_BUTTON.createSprite() );
+            attackButton = new Image( IMG.ATTACK_BUTTON.createSprite() );
             attackButton.setSize( Core.HEIGHT * 0.24f, Core.HEIGHT * 0.24f );
             attackButton.setPosition( Core.WIDTH - attackButton.getWidth() * 2.5f,
                                       attackButton.getHeight() * 0.4f );
@@ -426,7 +461,9 @@ public class GameScreen extends Base2DScreen {
                     if ( showGameOver ) {
                         return;
                     }
+                    UIHelper.clickAnimation( attackButton );
                     playerSystem.startAttack();
+                    Core.playerAttacking=true;
                 }
             } );
         }
@@ -450,26 +487,6 @@ public class GameScreen extends Base2DScreen {
         gameGroup.addActor( interactGroup );
 
         float inGameIconSize = Core.HEIGHT * 0.16f;
-
-        if ( inventoryButton == null ) {
-            inventoryButton = IMG.INVENTORY.getImageActor( inGameIconSize,
-                                                            inGameIconSize/2 );
-            inventoryButton.setPosition( Core.WIDTH - inGameIconSize,
-                                             Core.HEIGHT - inGameIconSize );
-            inventoryButton.addListener( new ClickListener() {
-                public void clicked ( InputEvent event, float x, float y ) {
-                    if ( showGameOver ) {
-                        return;
-                    }
-                    //SoundAsset.Click.play();
-                    UIHelper.clickAnimation( inventoryButton );
-                    //showInGameMenu();
-                }
-            } );
-        }else{
-            UIHelper.scaleIn( inventoryButton );
-        }
-        gameGroup.addActor( inventoryButton );
     }
 
 

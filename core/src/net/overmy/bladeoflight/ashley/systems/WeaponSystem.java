@@ -22,11 +22,16 @@ public class WeaponSystem extends IteratingSystem {
     @SuppressWarnings( "unchecked" )
     public WeaponSystem () {
         super( Family.all( WeaponComponent.class, PhysicalComponent.class ).get() );
+        bloker = false;
     }
 
 
     @Override
     protected void processEntity ( Entity entity, float delta ) {
+        if ( bloker ) {
+            return;
+        }
+
         WeaponComponent myWeaponComponent = MyMapper.MY_WEAPON.get( entity );
         PhysicalComponent physicalComponent = MyMapper.PHYSICAL.get( entity );
 
@@ -42,5 +47,13 @@ public class WeaponSystem extends IteratingSystem {
         matrix4.translate( weaponTranslation );
         matrix4.rotate( weaponRotation );
         physicalComponent.body.setWorldTransform( matrix4 );
+    }
+
+
+    private boolean bloker = false;
+
+
+    public void block () {
+        bloker = true;
     }
 }

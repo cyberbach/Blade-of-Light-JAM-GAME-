@@ -18,7 +18,7 @@ import com.badlogic.gdx.graphics.Color;
 public enum GameColor {
 
     BG( 0x2F343B ),
-    FOX( 0xECB2B9 ),
+    LIGHT( 0xFFE1C2 ),
     ;
 
     private final Color color;

@@ -4,13 +4,13 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody;
 
+import net.overmy.bladeoflight.Core;
 import net.overmy.bladeoflight.MyCamera;
 import net.overmy.bladeoflight.ashley.MyMapper;
 import net.overmy.bladeoflight.ashley.component.MyPlayerComponent;
@@ -30,8 +30,9 @@ public class MyPlayerSystem extends IteratingSystem {
     private final Vector3 notFilteredPos = new Vector3();
     private       float   modelAngle     = 0.0f;
 
-    private boolean jump = false;
-    private boolean block = false;
+    private boolean attack2 = false;
+    private boolean attack  = false;
+    private boolean block   = false;
 
     private Vector2 originalDirection = new Vector2(  );
     private Quaternion rotation = new Quaternion();
@@ -48,6 +49,8 @@ public class MyPlayerSystem extends IteratingSystem {
     protected void processEntity ( Entity entity, float delta ) {
         if(block)return;
 
+        if( Core.playerDie)return;
+
         btRigidBody playerBody = MyMapper.PHYSICAL.get( entity ).body;
 
         // Двигаем или останавливаем физическое тело
@@ -63,18 +66,31 @@ public class MyPlayerSystem extends IteratingSystem {
             bodyTransform.rotate( Vector3.Y, modelAngle );
             playerBody.proceedToTransform( bodyTransform );
 
-            if(originalDirection.len()>0.5f) {
-                MyMapper.ANIMATION.get( entity ).play( 2, 2.0f );
-                MyMapper.ANIMATION.get( entity ).queue( 2, 2.0f );
-            }else{
-                MyMapper.ANIMATION.get( entity ).play( 1, 2.0f );
-                MyMapper.ANIMATION.get( entity ).queue( 1, 2.0f );
+            if(!attack) {
+                if ( originalDirection.len() > 0.5f ) {
+                    MyMapper.ANIMATION.get( entity ).play( 2, 3.0f );
+                    MyMapper.ANIMATION.get( entity ).queue( 2, 3.0f );
+                } else {
+                    MyMapper.ANIMATION.get( entity ).play( 1, 2.0f );
+                    MyMapper.ANIMATION.get( entity ).queue( 1, 2.0f );
+                }
             }
         }
+
+        if(attack) {
+            MyMapper.ANIMATION.get( entity ).play( 3, 2.0f );
+            attack=false;
+        }
+
+        if(attack2) {
+            MyMapper.ANIMATION.get( entity ).play( 4, 2.0f );
+            attack2=false;
+        }
+
         playerBody.setLinearVelocity( velocity );
 /*
-        if ( jump ) {
-            jump = false;
+        if ( attack2 ) {
+            attack2 = false;
             playerBody.applyCentralImpulse( new Vector3( 0, 800, 0 ) );
             MyMapper.ANIMATION.get( entity ).play( 2, 1.0f );
         }*/
@@ -117,12 +133,13 @@ public class MyPlayerSystem extends IteratingSystem {
     }
 
 
-    public void startJump () {
-        jump = true;
+    public void startAttack2 () {
+        attack2 = true;
     }
 
 
     public void startAttack () {
+        attack = true;
     }
 
 

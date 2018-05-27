@@ -50,9 +50,10 @@ public class MyEntityListener implements EntityListener {
                 stringArray.add( animationComponent.animations.get( i ).id );
             }
             animationComponent.names = new ImmutableArray< String >( stringArray );
+
             String id = stringArray.get( 0 );
-            animationComponent.controller.animate( id, 1, 1.0f, null, 0f );
-            animationComponent.controller.queue( id, 1, 1.0f, null, 0f );
+            animationComponent.controller.animate( id, 1, 0.20f, null, 0f );
+            animationComponent.controller.queue( id, -1, 0.20f, null, 0f );
         }
 
 

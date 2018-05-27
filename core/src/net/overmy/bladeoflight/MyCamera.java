@@ -24,8 +24,8 @@ import net.overmy.bladeoflight.utils.Vector3Animator;
 
 public class MyCamera {
 
-    private static Vector3 cameraDirection = new Vector3( 0, 0, -1 );
-    public static Vector3           filteredPosition    = new Vector3();
+    private static Vector3 cameraDirection  = new Vector3( 0, 0, -1 );
+    public static  Vector3 filteredPosition = new Vector3();
 
     private static Vector3           cameraPosition      = new Vector3();
     private static Vector3Animator   camMotion           = new Vector3Animator();
@@ -51,7 +51,7 @@ public class MyCamera {
 
 
     public static void init () {
-        float cullingDistance = 400.0f;// Задняя плоскость отсечения (дальность тумана)
+        float cullingDistance = 50.0f;// Задняя плоскость отсечения (дальность тумана)
         float defaultFOV = 58.0f; // Угол обзора (67 - стандартный)
 
         Vector3 upVector = new Vector3( 0, 10000, 0 );
@@ -64,13 +64,18 @@ public class MyCamera {
         Color lightColor = new Color( 0.6f, 0.6f, 0.6f, 1.0f );
         light = new DirectionalLight();
         light.set( lightColor, 0, 0, 0 );
-        unblock ();
+        unblock();
     }
 
 
     public static void initBody () {
         GameHelper helper = new GameHelper();
         cameraPhysicalBody = helper.createCameraBody();
+    }
+
+
+    public static boolean constraintCreated () {
+        return constraint != null;
     }
 
 
@@ -93,6 +98,12 @@ public class MyCamera {
 
 
     public static void removeConnectionBody () {
+        if ( constraint == null ) {
+            return;
+        }
+
+        BulletWorld.removeBody( cameraPhysicalBody );
+        BulletWorld.removeConstraint( constraint );
         if ( constraint != null ) {
             constraint.dispose();
         }
@@ -132,18 +143,6 @@ public class MyCamera {
         updateMotion( delta );
 
         if ( !block ) {
-            if ( Gdx.input.isKeyJustPressed( Input.Keys.LEFT ) ) {
-                Matrix4 ghostTransform = cameraPhysicalGhostBody.getWorldTransform();
-                ghostTransform.rotate( Vector3.Y, 15 );
-                cameraPhysicalGhostBody.setWorldTransform( ghostTransform );
-            }
-
-            if ( Gdx.input.isKeyJustPressed( Input.Keys.RIGHT ) ) {
-                Matrix4 ghostTransform = cameraPhysicalGhostBody.getWorldTransform();
-                ghostTransform.rotate( Vector3.Y, -15 );
-                cameraPhysicalGhostBody.setWorldTransform( ghostTransform );
-            }
-
             Vector3 positionOfPhysicalBody = new Vector3();
             cameraPhysicalBody.getWorldTransform().getTranslation( positionOfPhysicalBody );
 

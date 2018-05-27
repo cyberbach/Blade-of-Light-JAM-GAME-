@@ -56,6 +56,7 @@ public final class Assets {
         //TextureAsset.load();
 
         ModelAsset.MY_PLAYER.load();
+        ModelAsset.SWORD.load();
         //ModelAsset.BOY.load();
     }
 
@@ -67,6 +68,7 @@ public final class Assets {
         IMG.build( manager );
         //TextureAsset.build();
         ModelAsset.MY_PLAYER.build();
+        ModelAsset.SWORD.build();
         //ModelAsset.BOY.build();
     }
 
@@ -87,6 +89,7 @@ public final class Assets {
         Settings.save();
 
         ModelAsset.MY_PLAYER.unload();
+        ModelAsset.SWORD.unload();
         //ModelAsset.BOY.unload();
 
     }

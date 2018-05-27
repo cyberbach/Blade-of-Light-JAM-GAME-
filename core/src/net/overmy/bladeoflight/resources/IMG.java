@@ -21,51 +21,16 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
  */
 
 public enum IMG {
-    AUTOREPAIR("autorepair"),
-    COG("cog"),
-    CONVERSATION("conversation"),
-    FILES("files"),
-    FULLFOLDER("fullfolder"),
-    OPENBOOK("openbook"),
-    USABLE("usable"),
-
-    SPEAKER("speaker"),
-    SOUNDON("soundon"),
-
     PAD( "pad" ),
     BUTTON( "button" ),
     AIM( "aim" ),
-    INVENTORY( "inventory" ),
 
-    UPGRADE( "upgrade" ),
-    JUMP_BUTTON( "jump" ),
-    HIT_BUTTON( "hit" ),
+    ATTACK2_BUTTON( "attack2" ),
+    ATTACK_BUTTON( "attack" ),
 
     CLOUD1( "cloud1" ),
     CLOUD2( "cloud2" ),
     CLOUD3( "cloud3" ),
-
-    WEAPON1( "weapon1" ),
-    WEAPON2( "weapon2" ),
-    WEAPON3( "weapon3" ),
-    WEAPON4( "weapon4" ),
-    BAT( "bat" ),
-    PILLOW( "pillow" ),
-    GUN( "gun" ),
-
-    KEY( "key" ),
-
-
-    // inventory
-    GSTAR( "gstaricon" ),
-    BSTAR( "bstaricon" ),
-    YSTAR( "ystaricon" ),
-
-    BLUE_BOTTLE( "bluebottle" ),
-    PURPLE_BOTTLE( "purplebottle" ),
-    RED_BOTTLE( "redbottle" ),
-    GREEN_BOTTLE( "greenbottle" ),
-    COIN( "coin" ),
 
     // particles
     STAR_PARTICLE( "starpart" ),

@@ -18,7 +18,6 @@ import com.badlogic.gdx.utils.Align;
 import net.overmy.bladeoflight.AshleyWorld;
 import net.overmy.bladeoflight.Core;
 import net.overmy.bladeoflight.MyGdxGame;
-import net.overmy.bladeoflight.MyGdxGame.SCREEN_TYPE;
 import net.overmy.bladeoflight.MyRender;
 import net.overmy.bladeoflight.logic.DynamicLevels;
 import net.overmy.bladeoflight.resources.FontAsset;
@@ -86,7 +85,7 @@ public class MenuScreen extends Base2DScreen {
         introGroup.addActor( titleGroup );
 
         // FIXME нужен рефактор
-        final boolean canResume = /*MyPlayer.live && */DynamicLevels.getCurrent() != 0;
+        /*final boolean canResume = MyPlayer.live && DynamicLevels.getCurrent() != 0;*/
 
         final float labelPosX = Core.WIDTH * 0.75f;
         final float label2PosY = Core.HEIGHT * 0.23f;
@@ -95,21 +94,19 @@ public class MenuScreen extends Base2DScreen {
         final float leftPosX = -Core.WIDTH_HALF; // over screen position
         final float rightPosX = Core.WIDTH; // over screen position
 
-        final Label startLabel = new Label( "начать игру",
+        final Label startLabel = new Label( TextAsset.StartGame.get(),
                                             FontAsset.MENU_TITLE.getStyle() );
-        startLabel.setColor( GameColor.FOX.get() );
-        final Label resumeLabel = new Label( "продолжить",
-                                             FontAsset.MENU_TITLE.getStyle() );
-        resumeLabel.setColor( GameColor.FOX.get() );
-        final Label settingsLabel = new Label( "настройки",
+        startLabel.setColor( GameColor.LIGHT.get() );
+
+        final Label settingsLabel = new Label( TextAsset.Options.get(),
                                                FontAsset.MENU_TITLE.getStyle() );
-        settingsLabel.setColor( GameColor.FOX.get() );
+        settingsLabel.setColor( GameColor.LIGHT.get() );
 
         introGroup.addActor( startLabel );
         introGroup.addActor( settingsLabel );
-        if ( canResume ) {
+        /*if ( canResume ) {
             introGroup.addActor( resumeLabel );
-        }
+        }*/
 
         UIHelper.rollIn( startLabel, rightPosX, label1PosY, labelPosX, label1PosY );
         startLabel.addListener( new ClickListener() {
@@ -119,11 +116,10 @@ public class MenuScreen extends Base2DScreen {
                 UIHelper.clickAnimation( startLabel );
                 UIHelper.rollOut( startLabel, labelPosX, label1PosY, leftPosX, label1PosY );
                 UIHelper.rollOut( settingsLabel, labelPosX, label2PosY, leftPosX, label2PosY );
-                UIHelper.rollOut( resumeLabel, labelPosX, label3PosY, leftPosX, label3PosY );
 
                 DynamicLevels.initLevels();
                 DynamicLevels.setCurrent( 0 );
-                AshleyWorld.dispose();
+                //AshleyWorld.dispose();
                 AshleyWorld.init();
 
                 //MyPlayer.clearAll();
@@ -133,6 +129,7 @@ public class MenuScreen extends Base2DScreen {
                 transitionTo( MyGdxGame.SCREEN_TYPE.LOADING_GAME );
             }
         } );
+/*
 
         if ( canResume ) {
             UIHelper.rollIn( resumeLabel, rightPosX, label3PosY, labelPosX, label3PosY );
@@ -152,6 +149,7 @@ public class MenuScreen extends Base2DScreen {
                 }
             } );
         }
+*/
 
         UIHelper.rollIn( settingsLabel, rightPosX, label2PosY, labelPosX, label2PosY );
         settingsLabel.addListener( new ClickListener() {
@@ -160,7 +158,6 @@ public class MenuScreen extends Base2DScreen {
                 //SoundAsset.Click.play();
                 UIHelper.rollOut( settingsLabel, labelPosX, label2PosY, leftPosX, label2PosY );
                 UIHelper.rollOut( startLabel, labelPosX, label1PosY, leftPosX, label1PosY );
-                UIHelper.rollOut( resumeLabel, labelPosX, label3PosY, leftPosX, label3PosY );
                 titleGroup.clearActions();
                 UIHelper.rollOut( titleGroup, Core.WIDTH_HALF, Core.HEIGHT * 0.8f, Core.WIDTH_HALF,
                                   Core.HEIGHT * 1.5f );
@@ -178,15 +175,15 @@ public class MenuScreen extends Base2DScreen {
         optionsGroup.addActor( UIHelper.BlackBG() );
         optionsGroup.addAction( Actions.alpha( 1, Core.FADE ) );
 
-        Label optionsTitleLabel = new Label( "настройки",
+        Label optionsTitleLabel = new Label( TextAsset.Options.get(),
                                              FontAsset.MENU_TITLE.getStyle() );
         optionsTitleLabel.setPosition( Core.WIDTH_HALF - optionsTitleLabel.getWidth() / 2,
                                        Core.HEIGHT * 0.75f );
         optionsGroup.addActor( optionsTitleLabel );
 
-        optionsGroup.addActor( UIHelper.MenuLabel( "звук", Core.HEIGHT * 0.6f ) );
+        optionsGroup.addActor( UIHelper.MenuLabel( TextAsset.Sound.get(), Core.HEIGHT * 0.6f ) );
         if ( soundBar == null ) {
-            soundBar = UIHelper.Bar( GameColor.FOX.get() );
+            soundBar = UIHelper.Bar( GameColor.LIGHT.get() );
             soundBar.setWidth( Core.WIDTH * 0.55f );
             soundBar.invalidate();
             soundBar.setValue( Settings.SOUND.getInteger() );
@@ -194,9 +191,9 @@ public class MenuScreen extends Base2DScreen {
         }
         optionsGroup.addActor( soundBar );
 
-        optionsGroup.addActor( UIHelper.MenuLabel( "music", Core.HEIGHT * 0.45f ) );
+        optionsGroup.addActor( UIHelper.MenuLabel( TextAsset.Music.get(), Core.HEIGHT * 0.45f ) );
         if ( musicBar == null ) {
-            musicBar = UIHelper.Bar( GameColor.FOX.get() );
+            musicBar = UIHelper.Bar( GameColor.LIGHT.get() );
             musicBar.setWidth( Core.WIDTH * 0.55f );
             musicBar.invalidate();
             musicBar.setValue( Settings.MUSIC.getInteger() );
@@ -204,9 +201,9 @@ public class MenuScreen extends Base2DScreen {
         }
         optionsGroup.addActor( musicBar );
 
-        optionsGroup.addActor( UIHelper.MenuLabel( "horiz", Core.HEIGHT * 0.3f ) );
+        optionsGroup.addActor( UIHelper.MenuLabel( TextAsset.Horiz.get(), Core.HEIGHT * 0.3f ) );
         if ( horizontalSensBar == null ) {
-            horizontalSensBar = UIHelper.Bar( GameColor.FOX.get() );
+            horizontalSensBar = UIHelper.Bar( GameColor.LIGHT.get() );
             horizontalSensBar.setWidth( Core.WIDTH * 0.55f );
             horizontalSensBar.invalidate();
             horizontalSensBar.setValue( Settings.HORIZ_SENS.getInteger() );
@@ -214,9 +211,9 @@ public class MenuScreen extends Base2DScreen {
         }
         optionsGroup.addActor( horizontalSensBar );
 
-        optionsGroup.addActor( UIHelper.MenuLabel( "vert", Core.HEIGHT * 0.15f ) );
+        optionsGroup.addActor( UIHelper.MenuLabel( TextAsset.Vert.get(), Core.HEIGHT * 0.15f ) );
         if ( verticalSensBar == null ) {
-            verticalSensBar = UIHelper.Bar( GameColor.FOX.get() );
+            verticalSensBar = UIHelper.Bar( GameColor.LIGHT.get() );
             verticalSensBar.setWidth( Core.WIDTH * 0.55f );
             verticalSensBar.invalidate();
             verticalSensBar.setValue( Settings.VERT_SENS.getInteger() );

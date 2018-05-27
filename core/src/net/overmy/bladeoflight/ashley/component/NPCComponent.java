@@ -17,7 +17,7 @@ public class NPCComponent extends TimeComponent {
     public int     currentAction = 0;
     public boolean hunting       = false;
     public boolean hurt          = false;
-    public float   damage        = 0.0f;
+    public float   damage        = 30.0f;
     public boolean die           = false;
     public Item    dropItem      = null;
 

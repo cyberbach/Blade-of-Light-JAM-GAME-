@@ -24,9 +24,21 @@ public enum ModelAsset {
     Level0,
     Level1,
     Level2,
+    Level3,
+    Level4,
+    Level5,
+    Level6,
+    Level7,
+    Level8,
+    Level9,
+    Level10,
+    Level11,
 
-    MY_PLAYER( "man2" ),
-    BOY( "player" ),
+    MY_PLAYER( "player" ),
+    MONSTER1( "monster1" ),
+    DRAKON1( "drakon1" ),
+
+    SWORD( "sword" ),
     ;
 
     private StringBuilder stringBuilder = new StringBuilder();

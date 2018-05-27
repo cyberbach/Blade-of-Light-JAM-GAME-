@@ -32,7 +32,7 @@ public class LifeComponent implements Component {
 
         // FIXME цвет бара
         final TextureRegion regionRed = new TextureRegion(
-                GFXHelper.createTexture( 16, 16, GameColor.BG.get() ) );
+                GFXHelper.createTexture( 16, 16, GameColor.LIGHT.get() ) );
         final float decalSize = 0.12f;
 
         decal = Decal.newDecal( decalSize, decalSize, regionRed, false );

@@ -7,9 +7,13 @@ package net.overmy.bladeoflight;
 
 public final class Core {
 
+    public static boolean playerDie = false;
+
+
     private Core () {
     }
 
+public static boolean playerAttacking = false;
 
     public static final float FADE      = 0.3f;
     public static final float FADE_HALF = FADE * 0.5f;

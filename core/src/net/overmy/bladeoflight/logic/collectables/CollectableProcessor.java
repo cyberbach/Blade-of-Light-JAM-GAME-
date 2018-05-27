@@ -2,6 +2,7 @@ package net.overmy.bladeoflight.logic.collectables;
 
 import com.badlogic.gdx.Gdx;
 
+import net.overmy.bladeoflight.ashley.EntityBuilder;
 import net.overmy.bladeoflight.logic.cutscenes.CutScene;
 import net.overmy.bladeoflight.logic.cutscenes.SCENE_ID;
 
@@ -22,6 +23,9 @@ public class CollectableProcessor {
                 case MY_TEST_TIRGGER:
                     Gdx.app.debug( "processssed", "MY_TEST_TIRGGER- 4 seconds" );
                     CutScene.start( SCENE_ID.SOME_SCENE, 4 );
+                    break;
+                case TRIGGER1:
+                    EntityBuilder.createText("testttttttt");
                     break;
             }
         }

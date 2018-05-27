@@ -5,5 +5,6 @@ package net.overmy.bladeoflight.logic.collectables;
         Contact me → http://vk.com/id17317
 */
 public enum Trigger {
-    MY_TEST_TIRGGER;
+    MY_TEST_TIRGGER,
+    TRIGGER1
 }

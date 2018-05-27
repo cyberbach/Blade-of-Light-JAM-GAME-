@@ -40,8 +40,17 @@ public final class DynamicLevels {
         GameHelper helper = new GameHelper();
 
         levelArray.add( new Level( helper.toInts( "0, 1" ), objects.LEVEL0() ) );
-        levelArray.add( new Level( helper.toInts( "1, 2, 0" ) ) );
-        levelArray.add( new Level( helper.toInts( "2, 1" ), objects.LEVEL2() ) );
+        levelArray.add( new Level( helper.toInts( "1, 2, 0, 3"), objects.LEVEL1()  ) );
+        levelArray.add( new Level( helper.toInts( "2, 1, 4" ) ) );
+        levelArray.add( new Level( helper.toInts( "3, 1, 4" ) ) );
+        levelArray.add( new Level( helper.toInts( "4, 2, 3, 5" ), objects.LEVEL4() ) );
+        levelArray.add( new Level( helper.toInts( "5, 4, 6" ) ) );
+        levelArray.add( new Level( helper.toInts( "6, 5, 7" ) ) );
+        levelArray.add( new Level( helper.toInts( "7, 6, 8" ) ) );
+        levelArray.add( new Level( helper.toInts( "8, 7, 9" ) ) );
+        levelArray.add( new Level( helper.toInts( "9, 8, 3,10" ) ) );
+        levelArray.add( new Level( helper.toInts( "10, 9, 11" ) ) );
+        levelArray.add( new Level( helper.toInts( "11, 10" ) ) );
 
         levels = new ImmutableArray< Level >( levelArray );
     }

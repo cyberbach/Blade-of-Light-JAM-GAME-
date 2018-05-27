@@ -5,6 +5,14 @@ package net.overmy.bladeoflight.ashley;
       Contact me → http://vk.com/id17317
  */
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g3d.decals.Decal;
+import com.badlogic.gdx.math.MathUtils;
+
+import net.overmy.bladeoflight.ashley.component.DecalComponent;
+import net.overmy.bladeoflight.resources.IMG;
+import net.overmy.bladeoflight.utils.Vector3Animator;
+
 public class DecalSubs {
 
     private DecalSubs () {
@@ -61,7 +69,7 @@ public class DecalSubs {
     }
 */
 
-/*
+
 
     public static DecalComponent StarsEffect ( float time ) {
         float decalSize = 0.12f;
@@ -73,9 +81,9 @@ public class DecalSubs {
         float fromY = 0.0f;
         float fromZ = 0.0f;
 
-        float toX = MathUtils.random( -1.5f, 1.5f );
-        float toY = MathUtils.random( 0.5f, 2.0f );
-        float toZ = MathUtils.random( -1.5f, 1.5f );
+        float toX = MathUtils.random( -2.5f, 2.5f );
+        float toY = MathUtils.random( 0.5f, 1.0f );
+        float toZ = MathUtils.random( -2.5f, 2.5f );
 
         float myTime = MathUtils.random( 0.8f * time, time );
 
@@ -87,7 +95,31 @@ public class DecalSubs {
         return new DecalComponent( decal, animator );
     }
 
+    public static DecalComponent StarsEffect2 ( float time ) {
+        float decalSize = 0.12f;
 
+        TextureRegion bubbleTextureRegion = IMG.STAR_PARTICLE.getRegion();
+        Decal decal = Decal.newDecal( decalSize, decalSize, bubbleTextureRegion, true );
+
+        float fromX = 0.0f;
+        float fromY = 0.0f;
+        float fromZ = 0.0f;
+
+        float toX = MathUtils.random( -2.5f, 2.5f );
+        float toY = MathUtils.random( -0.5f, 3.0f );
+        float toZ = MathUtils.random( -2.5f, 2.5f );
+
+        float myTime = MathUtils.random( 0.8f * time, time );
+
+        Vector3Animator animator = new Vector3Animator();
+        animator.setFrom( fromX, fromY, fromZ );
+        animator.setTo( toX, toY, toZ );
+        animator.setAnimationTime( myTime );
+
+        return new DecalComponent( decal, animator );
+    }
+
+/*
     public static DecalComponent CloudEffect ( float x, float z, float time ) {
 
         float decalSize = 5.0f + MathUtils.random( -1.0f, 7.0f );

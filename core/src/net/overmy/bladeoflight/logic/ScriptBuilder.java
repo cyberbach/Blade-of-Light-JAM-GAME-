@@ -19,27 +19,34 @@ public final class ScriptBuilder {
     }
 
 
-    public static ImmutableArray< NPCAction > SOME_NPC_MOVE_ON_GROUND () {
+    public static ImmutableArray< NPCAction > MONSTER1_MOVE_ON_LEVEL1 () {
         Array< NPCAction > queue = new Array< NPCAction >();
+
         queue.add( wait( 1.0f ) );
-        queue.add( move(28.615776f, -46.920258f) );
-        queue.add( wait( 2.0f ) );
-        queue.add( move(18.464893f, -37.144436f ) );
+        queue.add( hunt() );
+        queue.add( move(12.729724f, -26.19313f) );
         queue.add( wait( 1.0f ) );
-        queue.add( move(29.282198f, -36.65033f ) );
-        queue.add( wait( 3.0f ) );
+        queue.add( hunt() );
+        queue.add( move(-0.5718983f, -15.974129f) );
+        queue.add( wait( 1.0f ) );
+        queue.add( hunt() );
+        queue.add( move(-3.3788373f, -20.052458f) );
+        queue.add( hunt() );
         return new ImmutableArray< NPCAction >( queue );
     }
 
-    public static ImmutableArray< NPCAction > STAR_ON_LEVEL1 () {
+    public static ImmutableArray< NPCAction > DRAKON1_MOVE_ON_LEVEL4 () {
         Array< NPCAction > queue = new Array< NPCAction >();
-        queue.add( move(-7.297408f, -42.540188f) );
+
         queue.add( wait( 1.0f ) );
         queue.add( hunt() );
-        queue.add( move(-10.403938f, -40.797947f) );
-        queue.add( wait( 2.0f ) );
-        queue.add( move(-18.388197f, -45.05218f) );
+        queue.add( move(-32.800106f, -73.38079f) );
         queue.add( wait( 1.0f ) );
+        queue.add( hunt() );
+        queue.add( move(-39.30264f, -80.23786f ) );
+        queue.add( wait( 1.0f ) );
+        queue.add( hunt() );
+        queue.add( move(-47.024467f, -77.53844f) );
         queue.add( hunt() );
         return new ImmutableArray< NPCAction >( queue );
     }

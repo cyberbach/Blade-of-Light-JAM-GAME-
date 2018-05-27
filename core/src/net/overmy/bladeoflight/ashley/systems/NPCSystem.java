@@ -43,6 +43,16 @@ public class NPCSystem extends IteratingSystem {
     private Vector2 npcPosition = new Vector2();
 
 
+    Vector3 temp3=new Vector3(  );
+    public void setPlayerPosition ( Matrix4 playerTransform ) {
+        playerTransform.getTranslation( temp3 );
+        this.playerPosition.set( temp3.x, temp3.z );
+    }
+
+
+    private Vector2 playerPosition = new Vector2();
+
+
     @SuppressWarnings( "unchecked" )
     public NPCSystem () {
         super( Family.all( NPCComponent.class ).get() );
@@ -127,8 +137,8 @@ public class NPCSystem extends IteratingSystem {
                     attack = true;
 
                     npcPosition.set( notFilteredPos.x, notFilteredPos.z );
-                    /*tmp.set( MyPlayer.getPosition() ).sub( npcPosition );*/
-                    /*if ( tmp.len() > 8.0f || !MyPlayer.live ) {
+                    tmp.set( playerPosition ).sub( npcPosition );
+                    if ( tmp.len() > 8.0f ) {
                         npcComponent.time = 0;
                         npcComponent.hunting = false;
                     } else {
@@ -136,7 +146,7 @@ public class NPCSystem extends IteratingSystem {
                         direction.set( tmp );
                         npcComponent.hunting = true;
                         soundByDistance( entity );
-                    }*/
+                    }
 
                     break;
 
@@ -150,37 +160,13 @@ public class NPCSystem extends IteratingSystem {
         }
 
         AnimationComponent animationComponent = MyMapper.ANIMATION.get( entity );
-        String ID_CURRENT = "";//animationComponent.getID();
-        String ID_RUN = "RUN";
-        String ID_IDLE = "IDLE";
-        String ID_ATTACK = "ATTACK";
-        String ID_HURT = "HURT";
-        String ID_DIE = "DIE";
-
-        boolean npcInIDLE = ID_IDLE.equals( ID_CURRENT );
-        boolean npcIsRunning = ID_RUN.equals( ID_CURRENT );
-        boolean npcIsAttacking = ID_ATTACK.equals( ID_CURRENT );
-        boolean npcIsHurt = ID_HURT.equals( ID_CURRENT );
-        boolean npcIsDie = ID_DIE.equals( ID_CURRENT );
 
         int IDLE = 0;
         int RUN = 1;
         int ATTACK = 2;
-        int HURT = 3;
-        int DIE = 4;
+        int HURT = 1;
+        //int DIE = 4;
 
-        if ( npcComponent.die ) {
-            if ( !npcIsDie ) {
-                animationComponent.queue( DIE, 3.5f );
-                return;
-            } else {
-                return;
-            }
-        }
-
-        if ( !npcIsHurt && needToSkip ) {
-            entity.remove( SkipScriptComponent.class );
-        }
         float speed = 0.0f;
 
         boolean animationForced = forceAnimate != -1;
@@ -190,23 +176,12 @@ public class NPCSystem extends IteratingSystem {
             // Мы управляем персонажем джойстиком
             if ( directionLen != 0 ) {
                 // Персонаж на земле
-                float animationSpeed = 3.0f + 2.0f * directionLen;
-                if ( npcIsRunning && !attack ) {
+                float animationSpeed = 1.0f + 1.0f * directionLen;
+                if ( !attack ) {
                     animationComponent.queue( RUN, animationSpeed );
                 } else {
-                    if ( attack ) {
-                        if ( !npcIsAttacking && !npcIsHurt ) {
-                            animationComponent.play( ATTACK, animationSpeed );
-                            animationComponent.queue( IDLE, 2.0f );
-                        } else {
-                            animationComponent.queue( ATTACK, animationSpeed );
-                        }
-                    } else {
-                        if ( !npcIsHurt ) {
-                            animationComponent.play( RUN, animationSpeed );
-                            animationComponent.queue( IDLE, 2.0f );
-                        }
-                    }
+                    animationComponent.play( ATTACK, animationSpeed );
+                    animationComponent.queue( IDLE, 1.0f );
                 }
 
                 float runSpeed = 4.0f;
@@ -225,26 +200,13 @@ public class NPCSystem extends IteratingSystem {
                 }
             }
             // Скрипт не управляет персонажем
-            else {
-                if ( !npcIsHurt )
-                // Персонаж на земле
-                {
-                    if ( npcInIDLE ) {
-                        animationComponent.queue( IDLE, 2.0f );
-                    } else {
-                        animationComponent.play( IDLE, 2.0f );
-                        animationComponent.queue( IDLE, 2.0f );
-                    }
-                }
-                speed = 0.0f;
-            }
         } else {
-            animationComponent.queue( forceAnimate, 2.0f );
+            animationComponent.queue( forceAnimate, 1.0f );
         }
 
         if ( npcComponent.hurt ) {
             animationComponent.play( HURT, 3.5f );
-            animationComponent.queue( IDLE, 2.0f );
+            animationComponent.queue( IDLE, 1.0f );
             npcComponent.hurt = false;
         }
 
