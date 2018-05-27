@@ -7,6 +7,7 @@ package net.overmy.bladeoflight.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
@@ -52,9 +53,9 @@ import java.util.ArrayList;
 
 public class GameScreen extends Base2DScreen {
 
-    private Image aimImage        = null;
-    private Image attackButton    = null;
-    private Image jumpButton      = null;
+    private Image aimImage     = null;
+    private Image attackButton = null;
+    private Image jumpButton   = null;
 
     private Touchpad touchpad = null;
 
@@ -64,13 +65,14 @@ public class GameScreen extends Base2DScreen {
 
     private GUI_TYPE guiType;
 
-    private TextDecalSystem       textDecalSystem = null;
-    private InteractSystem        interactSystem  = null;
-    private PhysicalConnectSystem physicalConnectSystem  = null;
-    private MyPlayerSystem        playerSystem    = null;
-    private NPCSystem             npcSystem       = null;
+    private TextDecalSystem       textDecalSystem       = null;
+    private InteractSystem        interactSystem        = null;
+    private PhysicalConnectSystem physicalConnectSystem = null;
+    private MyPlayerSystem        playerSystem          = null;
+    private NPCSystem             npcSystem             = null;
 
-    private static ArrayList< Vector3 > pushedPositions = new ArrayList< Vector3 >();
+    //private static ArrayList< Vector3 > pushedPositions = new ArrayList< Vector3 >();
+    private static ArrayList< Vector3 > pushedPositions3 = new ArrayList< Vector3 >();
 
     private StringBuilder log = new StringBuilder();
 
@@ -88,7 +90,7 @@ public class GameScreen extends Base2DScreen {
     public void show () {
         super.show();
 
-        Core.playerDie=false;
+        Core.playerDie = false;
         MyCamera.unblock();
 
         textDecalSystem = AshleyWorld.getEngine().getSystem( TextDecalSystem.class );
@@ -97,6 +99,9 @@ public class GameScreen extends Base2DScreen {
         playerSystem = AshleyWorld.getEngine().getSystem( MyPlayerSystem.class );
         npcSystem = AshleyWorld.getEngine().getSystem( NPCSystem.class );
         physicalConnectSystem = AshleyWorld.getEngine().getSystem( PhysicalConnectSystem.class );
+
+        playerSystem.playWalkSounds ();
+        npcSystem.playWalkSounds ();
 
         //AshleyWorld.getEngine().getSystem( NPCSystem.class ).setWalkSound();
 
@@ -136,30 +141,33 @@ public class GameScreen extends Base2DScreen {
             MyPlayer.addToBag( Item.GUN_WEAPON_UPGRADED );*/
         }
 
-            ModelInstance playerInstance = ModelAsset.MY_PLAYER.get();
+        ModelInstance playerInstance = ModelAsset.MY_PLAYER.get();
 
-        for( Material a : playerInstance.materials){
+        for ( Material a : playerInstance.materials ) {
             a.clear();
             ColorAttribute diffuse = ColorAttribute.createDiffuse( GameColor.BG.get() );
             a.set( diffuse );
         }
 
-            GameHelper helper = new GameHelper();
-        body = EntityBuilder.createPlayer( playerInstance,
-                                                           helper.startPositions[ DynamicLevels.getCurrent() ] );
+        body = EntityBuilder.createPlayer(
+                playerInstance,
+                new Vector3( -0.92070246f, -2.0000045f, -0.72908103f ) );
 
-            Node rightArmNode = playerInstance.getNode( "rightArm3", true );
-            EntityBuilder.createWeapon( rightArmNode, playerInstance.transform );
+        Node rightArmNode = playerInstance.getNode( "rightArm3", true );
+        EntityBuilder.createWeapon( rightArmNode, playerInstance.transform );
 
-            btRigidBody ghostCameraBody = EntityBuilder.createGhostCamera( body );
+        btRigidBody ghostCameraBody = EntityBuilder.createGhostCamera( body );
 
-            MyCamera.setConnectionBody( ghostCameraBody );
+        MyCamera.setConnectionBody( ghostCameraBody );
 
-            CutScene.setGameScene( this );
+        CutScene.setGameScene( this );
 
         showGameGUI();
     }
+
+
     btRigidBody body;
+
 
     @Override
     public boolean touchDragged ( float x, float y ) {
@@ -195,48 +203,48 @@ public class GameScreen extends Base2DScreen {
         //MusicAsset.playRandom( delta );
 
         if ( DEBUG.GAME_MASTER_MODE.get() ) {
-            if ( Gdx.input.isKeyJustPressed( Input.Keys.ENTER ) ) {
-                Vector3 thisPosition = playerSystem.getNotFilteredPos();
-                pushedPositions.add( thisPosition );
+            if ( Gdx.input.isKeyJustPressed( Keys.ENTER ) ) {
+                Vector3 thisPosition321 = new Vector3( playerSystem.getNotFilteredPos() );
+                pushedPositions3.add( thisPosition321 );
 
-                String pos = "new Vector3( " + thisPosition.x + "f, " +
-                             thisPosition.y + "f, " + thisPosition.z + "f )";
+                String pos = "new Vector3( " + thisPosition321.x + "f, " +
+                             thisPosition321.y + "f, " + thisPosition321.z + "f )";
                 Gdx.app.debug( "Pushed angle = " + playerSystem.getAngle(), "\n" + pos );
                 Gdx.app.debug( "Current camera angle = " + MyCamera.filteredCameraAngle, "\n" );
                 Gdx.app.debug( "THIS LOCATION", "" + DynamicLevels.getCurrent() );
             }
 
-            if ( Gdx.input.isKeyJustPressed( Input.Keys.BACKSPACE ) ) {
-                pushedPositions.clear();
+            if ( Gdx.input.isKeyJustPressed( Keys.BACKSPACE ) ) {
+                pushedPositions3.clear();
                 Gdx.app.debug( "♦ Positions", "cleared ♦" );
             }
 
-            if ( Gdx.input.isKeyPressed( Input.Keys.W ) ) {
+            if ( Gdx.input.isKeyPressed( Keys.W ) ) {
                 playerSystem.move( 0, -1 );
             }
 
-            if ( Gdx.input.isKeyPressed( Input.Keys.S ) ) {
+            if ( Gdx.input.isKeyPressed( Keys.S ) ) {
                 playerSystem.move( 0, 1 );
             }
 
-            if ( Gdx.input.isKeyPressed( Input.Keys.A ) ) {
+            if ( Gdx.input.isKeyPressed( Keys.A ) ) {
                 playerSystem.move( -1, 0 );
             }
 
-            if ( Gdx.input.isKeyPressed( Input.Keys.D ) ) {
+            if ( Gdx.input.isKeyPressed( Keys.D ) ) {
                 playerSystem.move( 1, 0 );
             }
 
-            if ( Gdx.input.isKeyJustPressed( Input.Keys.SPACE ) ) {
+            if ( Gdx.input.isKeyJustPressed( Keys.SPACE ) ) {
                 playerSystem.startAttack2();
             }
 
             // GameMaster Mode
             // add hover coin
-            if ( Gdx.input.isKeyJustPressed( Input.Keys.NUM_1 ) ) {
+            if ( Gdx.input.isKeyJustPressed( Keys.NUM_1 ) ) {
                 StringBuilder stringBuilder = new StringBuilder();
 
-                for ( Vector3 pushed : pushedPositions ) {
+                for ( Vector3 pushed : pushedPositions3 ) {
                     stringBuilder.append( "objects.add( hoverCoin( " );
                     stringBuilder.append( pushed.x );
                     stringBuilder.append( "f, " );
@@ -249,10 +257,10 @@ public class GameScreen extends Base2DScreen {
                 Gdx.app.debug( "Pushed positions", "\n" + stringBuilder.toString() );
             }
             // add box
-            if ( Gdx.input.isKeyJustPressed( Input.Keys.NUM_2 ) ) {
+            if ( Gdx.input.isKeyJustPressed( Keys.NUM_2 ) ) {
                 StringBuilder stringBuilder = new StringBuilder();
 
-                for ( Vector3 pushed : pushedPositions ) {
+                for ( Vector3 pushed : pushedPositions3 ) {
                     stringBuilder.append( "objects.add( box( " );
                     stringBuilder.append( pushed.x );
                     stringBuilder.append( "f, " );
@@ -265,10 +273,10 @@ public class GameScreen extends Base2DScreen {
                 Gdx.app.debug( "Pushed positions", "\n" + stringBuilder.toString() );
             }
             // add move point
-            if ( Gdx.input.isKeyJustPressed( Input.Keys.NUM_3 ) ) {
+            if ( Gdx.input.isKeyJustPressed( Keys.NUM_3 ) ) {
                 StringBuilder stringBuilder = new StringBuilder();
 
-                for ( Vector3 pushed : pushedPositions ) {
+                for ( Vector3 pushed : pushedPositions3 ) {
                     //queue.add( new NPCAction( ACTION_ID.MOVE, new Vector2( 15.5f, -3.166f ), 10.0f ) );
                     stringBuilder.append(
                             "queue.add( move(" );
@@ -297,8 +305,8 @@ public class GameScreen extends Base2DScreen {
             //}
         }
 
-        if(body!=null && !Core.playerDie){
-            npcSystem.setPlayerPosition(body.getWorldTransform());
+        if ( body != null && !Core.playerDie ) {
+            npcSystem.setPlayerPosition( body.getWorldTransform() );
         }
 
         if ( DEBUG.FPS.get() ) {
@@ -332,19 +340,20 @@ public class GameScreen extends Base2DScreen {
             }
         }
 
-        if(Core.playerDie){
-            if(!playerIsAlreadyDIE) {
+        if ( Core.playerDie ) {
+            if ( !playerIsAlreadyDIE ) {
                 Gdx.app.debug( "", "Core.playerDie in game screen" );
                 MyCamera.block();
                 AshleyWorld.getEngine().getSystem( MyPlayerSystem.class ).block();
                 //AshleyWorld.getEngine().getSystem( WeaponSystem.class ).block();
                 hideGameGUI();
-                playerIsAlreadyDIE=true;
+                playerIsAlreadyDIE = true;
 
                 //physicalConnectSystem.block();
             }
         }
     }
+
 
     private boolean playerIsAlreadyDIE = false;
 
@@ -384,7 +393,9 @@ public class GameScreen extends Base2DScreen {
 
 
     public void hideGameGUI () {
-        if(guiType.equals( GUI_TYPE.NONE ))return;
+        if ( guiType.equals( GUI_TYPE.NONE ) ) {
+            return;
+        }
         guiType = GUI_TYPE.NONE;
 
         touchPadGroup.clearActions();
@@ -463,7 +474,7 @@ public class GameScreen extends Base2DScreen {
                     }
                     UIHelper.clickAnimation( attackButton );
                     playerSystem.startAttack();
-                    Core.playerAttacking=true;
+                    Core.playerAttacking = true;
                 }
             } );
         }

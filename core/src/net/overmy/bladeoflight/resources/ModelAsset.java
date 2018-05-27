@@ -37,6 +37,9 @@ public enum ModelAsset {
     MY_PLAYER( "player" ),
     MONSTER1( "monster1" ),
     DRAKON1( "drakon1" ),
+    SPIDER1( "spider1" ),
+    BALL1( "ball1" ),
+    BALL2( "ball2" ),
 
     SWORD( "sword" ),
     ;

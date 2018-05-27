@@ -22,7 +22,9 @@ import net.overmy.bladeoflight.MyRender;
 import net.overmy.bladeoflight.logic.DynamicLevels;
 import net.overmy.bladeoflight.resources.FontAsset;
 import net.overmy.bladeoflight.resources.GameColor;
+import net.overmy.bladeoflight.resources.MusicAsset;
 import net.overmy.bladeoflight.resources.Settings;
+import net.overmy.bladeoflight.resources.SoundAsset;
 import net.overmy.bladeoflight.resources.TextAsset;
 import net.overmy.bladeoflight.utils.UIHelper;
 
@@ -248,8 +250,11 @@ public class MenuScreen extends Base2DScreen {
 
 
     private void updateVolume () {
-        //SoundAsset.setVolume((float)Settings.SOUND.getInteger() / 100.0f);
-        //MusicAsset.setVolume((float)Settings.MUSIC.getInteger() / 100.0f);
+        SoundAsset.setVolume( (float)Settings.SOUND.getInteger() / 100.0f );
+        MusicAsset.setVolume((float)Settings.MUSIC.getInteger() / 100.0f);
+
+        MusicAsset.Main.play( true );
+
     }
 
 

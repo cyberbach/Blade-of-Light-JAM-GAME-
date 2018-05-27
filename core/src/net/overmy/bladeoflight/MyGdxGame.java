@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.Logger;
 import net.overmy.bladeoflight.logic.DynamicLevels;
 import net.overmy.bladeoflight.resources.Assets;
 import net.overmy.bladeoflight.resources.GameColor;
+import net.overmy.bladeoflight.resources.MusicAsset;
 import net.overmy.bladeoflight.resources.Settings;
 import net.overmy.bladeoflight.screen.GameScreen;
 import net.overmy.bladeoflight.screen.LoadingScreen;
@@ -94,6 +95,8 @@ public class MyGdxGame extends ApplicationAdapter {
 
 	@Override
 	public void dispose () {
+		MusicAsset.stopAll();
+
 		AshleyWorld.dispose();
 		BulletWorld.dispose();
 		Assets.unload();

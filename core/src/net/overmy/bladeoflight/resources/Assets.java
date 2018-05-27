@@ -46,40 +46,34 @@ public final class Assets {
         DialogAsset.init();
 
         FontAsset.load( manager );
-        //MusicAsset.load( manager );
-        //SoundAsset.load( manager );
+        MusicAsset.load( manager );
+        SoundAsset.load( manager );
         IMG.load( manager );
 
         ModelAsset.setManager( manager );
-        //TextureAsset.setManager( manager );
-
-        //TextureAsset.load();
 
         ModelAsset.MY_PLAYER.load();
         ModelAsset.SWORD.load();
-        //ModelAsset.BOY.load();
     }
 
 
     public static void build () {
         FontAsset.build( manager );
-        //MusicAsset.build( manager );
-        //SoundAsset.build( manager );
+        MusicAsset.build( manager );
+        SoundAsset.build( manager );
         IMG.build( manager );
-        //TextureAsset.build();
+
         ModelAsset.MY_PLAYER.build();
         ModelAsset.SWORD.build();
-        //ModelAsset.BOY.build();
     }
 
 
     public static void unload () {
         FontAsset.unload( manager );
-        //MusicAsset.unload( manager );
-        //SoundAsset.unload( manager );
+        MusicAsset.unload( manager );
+        SoundAsset.unload( manager );
         IMG.unload( manager );
 
-        //TextureAsset.unload();
 
         ModelAsset.unloadAll();
 
@@ -90,7 +84,6 @@ public final class Assets {
 
         ModelAsset.MY_PLAYER.unload();
         ModelAsset.SWORD.unload();
-        //ModelAsset.BOY.unload();
 
     }
 

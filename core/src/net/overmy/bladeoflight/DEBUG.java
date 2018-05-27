@@ -16,10 +16,10 @@ public enum DEBUG {
     FPS( false ),
     SCREEN_FPS( false ), // должен быть включен FPS
 
-    ON_WINDOWS( true ),
+    ON_WINDOWS( false ),
 
     CONTACTS( false ),
-    ENTITIES( true ),
+    ENTITIES( false ),
     PHYSICAL_MESH( false ),
     DYNAMIC_LEVELS( false ),
     GAME_MASTER_MODE( true ),

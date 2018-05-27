@@ -256,6 +256,7 @@ public class WorldContactListener extends ContactListener {
                     body2.getWorldTransform().getTranslation( tempPosition2 );
                     EntityBuilder.create5StarsFX( tempPosition2 );
                     //SoundAsset.HIT.play();
+                    SoundAsset.PLAYER_DAMAGE.play();
 
                     //MyPlayer.hurt = true;
 
@@ -278,6 +279,7 @@ public class WorldContactListener extends ContactListener {
                     body1.getWorldTransform().getTranslation( tempPosition1 );
                     EntityBuilder.create5StarsFX( tempPosition1 );
                     //SoundAsset.HIT.play();
+                    SoundAsset.PLAYER_DAMAGE.play();
 
                     //MyPlayer.hurt = true;
 
@@ -309,6 +311,7 @@ public class WorldContactListener extends ContactListener {
                 EntityBuilder.create5StarsFX( tempPosition1 );
 
                 //SoundAsset.HIT.play();
+                playerHitNPCSound();
 
                 tempPosition1.sub( tempPosition2 ).nor().scl( 50 );
                 body1.applyCentralImpulse( tempPosition1 );
@@ -346,6 +349,7 @@ public class WorldContactListener extends ContactListener {
                 EntityBuilder.create5StarsFX( tempPosition2 );
 
                 //SoundAsset.HIT.play();
+                playerHitNPCSound();
 
                 tempPosition2.sub( tempPosition1 ).nor().scl( 50 );
                 body2.applyCentralImpulse( tempPosition2 );
@@ -425,6 +429,13 @@ public class WorldContactListener extends ContactListener {
         }
     }
 
+    private void playerHitNPCSound(){
+        switch ( MathUtils.random( 3 ) ){
+            case 0: SoundAsset.PLAYER_HIT_NPC1.play();break;
+            case 1: SoundAsset.PLAYER_HIT_NPC2.play();break;
+            default: SoundAsset.PLAYER_HIT_NPC3.play();break;
+        }
+    }
 
     public void setEntities ( ImmutableArray< Entity > entities ) {
         this.entities = entities;

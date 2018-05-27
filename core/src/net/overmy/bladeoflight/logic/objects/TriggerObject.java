@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Vector3;
 
 import net.overmy.bladeoflight.ashley.EntityBuilder;
 import net.overmy.bladeoflight.ashley.component.RemoveByTimeComponent;
-import net.overmy.bladeoflight.logic.collectables.Trigger;
+import net.overmy.bladeoflight.logic.collectables.TRIGGER;
 import net.overmy.bladeoflight.logic.collectables.TriggerCollectable;
 import net.overmy.bladeoflight.resources.ModelAsset;
 
@@ -25,7 +25,7 @@ public class TriggerObject implements GameObject {
     private float              size        = 1.0f;
 
 
-    public TriggerObject ( Trigger trigger, Vector3 position, float size ) {
+    public TriggerObject ( TRIGGER trigger, Vector3 position, float size ) {
         this.position = position;
         this.collectable = new TriggerCollectable( trigger );
         this.size = size;

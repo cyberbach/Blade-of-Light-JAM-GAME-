@@ -304,17 +304,71 @@ public final class EntityBuilder {
 
         ModelInstance modelInstance = modelAsset.get();
 
-        PhysicalBuilder physicalBuilderNPC = new PhysicalBuilder()
-                .setModelInstance( modelInstance )
-                .defaultMotionState()
-                .setPosition( position )
-                .setMass( 60.0f )
-                .capsuleShape()
-                .setCollisionFlag( CollisionFlags.CF_CHARACTER_OBJECT )
-                .setCallbackFlag( BulletWorld.NPC_FLAG )
-                .setCallbackFilter( BulletWorld.ENEMY_FILTER )
-                .disableRotation()
-                .disableDeactivation();
+
+        PhysicalBuilder physicalBuilderNPC;
+
+
+        if(modelAsset.equals( ModelAsset.SPIDER1 )) {
+            physicalBuilderNPC = new PhysicalBuilder()
+                    .setModelInstance( modelInstance )
+                    .defaultMotionState()
+                    .setPosition( position )
+                    .setMass( 60.0f )
+                    .capsuleShape(1.5f,0)
+                    .setCollisionFlag( CollisionFlags.CF_CHARACTER_OBJECT )
+                    .setCallbackFlag( BulletWorld.NPC_FLAG )
+                    .setCallbackFilter( BulletWorld.ENEMY_FILTER )
+                    .disableRotation()
+                    .disableDeactivation();
+        }else if(modelAsset.equals( ModelAsset.SPIDER1 )){
+            physicalBuilderNPC = new PhysicalBuilder()
+                    .setModelInstance( modelInstance )
+                    .defaultMotionState()
+                    .setPosition( position )
+                    .setMass( 60.0f )
+                    .capsuleShape(1.0f,1)
+                    .setCollisionFlag( CollisionFlags.CF_CHARACTER_OBJECT )
+                    .setCallbackFlag( BulletWorld.NPC_FLAG )
+                    .setCallbackFilter( BulletWorld.ENEMY_FILTER )
+                    .disableRotation()
+                    .disableDeactivation();
+        }else if(modelAsset.equals( ModelAsset.MONSTER1 )){
+            physicalBuilderNPC = new PhysicalBuilder()
+                    .setModelInstance( modelInstance )
+                    .defaultMotionState()
+                    .setPosition( position )
+                    .setMass( 60.0f )
+                    .capsuleShape(1.5f,1.5f)
+                    .setCollisionFlag( CollisionFlags.CF_CHARACTER_OBJECT )
+                    .setCallbackFlag( BulletWorld.NPC_FLAG )
+                    .setCallbackFilter( BulletWorld.ENEMY_FILTER )
+                    .disableRotation()
+                    .disableDeactivation();
+        }else if(modelAsset.equals( ModelAsset.DRAKON1 )){
+            physicalBuilderNPC = new PhysicalBuilder()
+                    .setModelInstance( modelInstance )
+                    .defaultMotionState()
+                    .setPosition( position )
+                    .setMass( 60.0f )
+                    .capsuleShape(1.5f,1.0f)
+                    .setCollisionFlag( CollisionFlags.CF_CHARACTER_OBJECT )
+                    .setCallbackFlag( BulletWorld.NPC_FLAG )
+                    .setCallbackFilter( BulletWorld.ENEMY_FILTER )
+                    .disableRotation()
+                    .disableDeactivation();
+        }else{
+            physicalBuilderNPC = new PhysicalBuilder()
+                    .setModelInstance( modelInstance )
+                    .defaultMotionState()
+                    .setPosition( position )
+                    .setMass( 60.0f )
+                    .capsuleShape()
+                    .setCollisionFlag( CollisionFlags.CF_CHARACTER_OBJECT )
+                    .setCallbackFlag( BulletWorld.NPC_FLAG )
+                    .setCallbackFilter( BulletWorld.ENEMY_FILTER )
+                    .disableRotation()
+                    .disableDeactivation();
+        }
 
         PhysicalComponent physicalComponent = physicalBuilderNPC.buildPhysicalComponent();
         physicalComponent.body.setRollingFriction( 0.1f );

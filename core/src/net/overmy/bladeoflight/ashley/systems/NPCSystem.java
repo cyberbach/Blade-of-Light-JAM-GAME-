@@ -18,6 +18,7 @@ import net.overmy.bladeoflight.ashley.component.SkipScriptComponent;
 import net.overmy.bladeoflight.ashley.component.TextDecalComponent;
 import net.overmy.bladeoflight.logic.NPCAction;
 import net.overmy.bladeoflight.resources.ModelAsset;
+import net.overmy.bladeoflight.resources.SoundAsset;
 
 
 /*
@@ -227,6 +228,7 @@ public class NPCSystem extends IteratingSystem {
 
     private void keepCalm () {
         direction.set( 0, 0 );
+        SoundAsset.NPC_STEP.setThisVolume( 0 );
         //walk.setThisVolume( 0.0f );
     }
 
@@ -245,10 +247,9 @@ public class NPCSystem extends IteratingSystem {
                           npcAsset.equals( ModelAsset.BIRD2ANGRY );*/
         }
 
-        if ( !isFlyingNPC ) {
-            float walkVolume = distance < MAX_LISTEN_DISTANCE ? distance / MAX_LISTEN_DISTANCE : 0;
+            //float walkVolume = distance < MAX_LISTEN_DISTANCE ? distance / MAX_LISTEN_DISTANCE : 0;
             //walk.setThisVolume( walkVolume );
-        }
+            SoundAsset.NPC_STEP.setThisVolume( 1 );
     }
 
 
@@ -257,5 +258,13 @@ public class NPCSystem extends IteratingSystem {
         super.removedFromEngine( engine );
 
         //disableWalkSound();
+    }
+
+
+    public void playWalkSounds () {
+        SoundAsset.NPC_STEP.stop();
+        SoundAsset.NPC_STEP.play();
+        SoundAsset.NPC_STEP.playLoop();
+        SoundAsset.NPC_STEP.setThisVolume( 0 );
     }
 }

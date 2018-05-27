@@ -5,10 +5,10 @@ package net.overmy.bladeoflight.logic.collectables;
         Contact me → http://vk.com/id17317
 */
 public class TriggerCollectable implements Collectable {
-    public Trigger trigger;
+    public TRIGGER trigger;
 
 
-    public TriggerCollectable ( Trigger trigger ) {
+    public TriggerCollectable ( TRIGGER trigger ) {
         this.trigger = trigger;
     }
 }

@@ -14,6 +14,8 @@ import net.overmy.bladeoflight.Core;
 import net.overmy.bladeoflight.MyCamera;
 import net.overmy.bladeoflight.ashley.MyMapper;
 import net.overmy.bladeoflight.ashley.component.MyPlayerComponent;
+import net.overmy.bladeoflight.resources.MusicAsset;
+import net.overmy.bladeoflight.resources.SoundAsset;
 
 
 /*
@@ -38,11 +40,19 @@ public class MyPlayerSystem extends IteratingSystem {
     private Quaternion rotation = new Quaternion();
 
 
+
+
     @SuppressWarnings( "unchecked" )
     public MyPlayerSystem () {
         super( Family.all( MyPlayerComponent.class ).get() );
     }
 
+
+    public void playWalkSounds () {
+        SoundAsset.PLAYER_STEP.play();
+        SoundAsset.PLAYER_STEP.playLoop();
+        SoundAsset.PLAYER_STEP.setThisVolume( 0 );
+    }
 
 
     @Override
@@ -61,6 +71,7 @@ public class MyPlayerSystem extends IteratingSystem {
         bodyTransform.getTranslation( notFilteredPos );
 
         if ( direction.len() != 0 ) {
+            SoundAsset.PLAYER_STEP.setThisVolume( 1 );
             bodyTransform.idt();
             bodyTransform.setToTranslation( notFilteredPos );
             bodyTransform.rotate( Vector3.Y, modelAngle );
@@ -75,16 +86,21 @@ public class MyPlayerSystem extends IteratingSystem {
                     MyMapper.ANIMATION.get( entity ).queue( 1, 2.0f );
                 }
             }
+        }else{
+            SoundAsset.PLAYER_STEP.setThisVolume( 0 );
         }
 
         if(attack) {
             MyMapper.ANIMATION.get( entity ).play( 3, 2.0f );
             attack=false;
+            SoundAsset.SWORD.play();
+
         }
 
         if(attack2) {
             MyMapper.ANIMATION.get( entity ).play( 4, 2.0f );
             attack2=false;
+            SoundAsset.SWORD.play();
         }
 
         playerBody.setLinearVelocity( velocity );
@@ -147,7 +163,7 @@ public class MyPlayerSystem extends IteratingSystem {
     public void removedFromEngine ( Engine engine ) {
         super.removedFromEngine( engine );
 
-        //disableWalkSound();
+        SoundAsset.PLAYER_STEP.stop();
     }
 
 

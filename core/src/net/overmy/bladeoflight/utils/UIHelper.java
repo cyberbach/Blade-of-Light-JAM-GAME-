@@ -19,6 +19,8 @@ import net.overmy.bladeoflight.Core;
 import net.overmy.bladeoflight.resources.FontAsset;
 import net.overmy.bladeoflight.resources.GameColor;
 import net.overmy.bladeoflight.resources.IMG;
+import net.overmy.bladeoflight.resources.MusicAsset;
+import net.overmy.bladeoflight.resources.SoundAsset;
 
 
 /*
@@ -238,6 +240,8 @@ public final class UIHelper {
 
 
     public static void clickAnimation ( Actor actor ) {
+        SoundAsset.CLICK.play();
+
         final float timeIn = Core.FADE_HALF * 0.2f;
         final float timeOut = Core.FADE_HALF * 0.8f;
         actor.addAction( Actions.sequence(

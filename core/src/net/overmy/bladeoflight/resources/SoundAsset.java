@@ -9,7 +9,22 @@ import com.badlogic.gdx.audio.Sound;
  */
 
 public enum SoundAsset {
+    A1("a1"),
+    A2("a2"),
+    A3("a3"),
+    A4("a4"),
+    A5("a5"),
 
+    CLICK("click"),
+    SWORD("sword"),
+
+    PLAYER_HIT_NPC1("plhit1"),
+    PLAYER_HIT_NPC2("plhit2"),
+    PLAYER_HIT_NPC3("plhit3"),
+
+    PLAYER_DAMAGE("damage"),
+    PLAYER_STEP("step1"),
+    NPC_STEP("step2"),
     ;
 
     private final String path;
@@ -30,7 +45,8 @@ public enum SoundAsset {
 
     SoundAsset ( final String path ) {
         String DEFAULT_DIR = "sound/";
-        this.path = DEFAULT_DIR + path;
+        String DEFAULT_EXT = ".ogg";
+        this.path = DEFAULT_DIR + path+DEFAULT_EXT;
     }
 
 /*

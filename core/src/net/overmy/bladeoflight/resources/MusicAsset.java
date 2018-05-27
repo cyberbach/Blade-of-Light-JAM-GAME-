@@ -17,6 +17,7 @@ import net.overmy.bladeoflight.DEBUG;
  */
 
 public enum MusicAsset {
+    Main("ambient.ogg")
     ;
 
     private final String path;
